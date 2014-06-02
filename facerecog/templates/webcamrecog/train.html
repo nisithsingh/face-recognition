@@ -1,0 +1,62 @@
+    {% extends 'base.html' %}
+     
+     
+    {% block title %} Input Face {% endblock %}
+     
+    {% block content %}
+            
+    <style type="text/css">
+      body{
+        max-width: 300px;
+        max-height: 300px;
+      }
+      #live_video{
+        top: 0px;
+        height: 100%;
+        width: 100%;
+        left: 0px;
+      }
+    </style>
+  
+    <div>  
+    <video id="live_video" autoplay controls></video>
+     <form action="http://127.0.0.1:8000/save_image" method="post">{% csrf_token %}
+            <div>
+            <input type="text" id="name" name="name"/>     
+            
+ 
+            <input type="submit"  />
+            </div>
+            </form>
+    <canvas width="320" id="canvas" height="240" style="display: inline;"></canvas>
+    
+    </div>
+    <script type="text/javascript">
+      var video = document.getElementById("live_video");
+      var canvas = document.getElementById("canvas");
+      navigator.webkitGetUserMedia({video:true, audio:true},
+          function(stream) {
+            video.src = window.webkitURL.createObjectURL(stream);
+          }, function(err) {
+                console.log("Unable to get video stream!")
+            }
+      );
+      
+      var ctx = canvas.getContext('2d');
+      var data = ''
+      timer = setInterval(
+                function(){
+
+                    ctx.drawImage(video,0,0,320,240);
+                    data = canvas.toDataURL('image/jpeg',1.0);
+
+                    //alert(data);
+                    },2500);
+      alert(data);
+                    
+    </script>
+
+    {% endblock %}
+
+  
+    
