@@ -11,5 +11,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'webcamrecog.views.home'),
     url(r'^home/$', 'webcamrecog.views.home'),
-    url(r'^train/', 'webcamrecog.views.train'),
+    url(r'^train/$', 'webcamrecog.views.train'),
+    url(r'^save/$', 'webcamrecog.views.save'),
 )

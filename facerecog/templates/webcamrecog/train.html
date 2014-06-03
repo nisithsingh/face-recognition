@@ -1,48 +1,49 @@
-    {% extends 'base.html' %}
-     
-     
-    {% block title %} Input Face {% endblock %}
-     
-    {% block content %}
-            
-
-    <div class="video-container">  
-    <video id="live_video" autoplay controls></video>
-     <form action="/save_image/" method="post">{% csrf_token %}
-            <div>
-            <input type="text" id="name" name="name"/>     
-            
+{% extends 'base.html' %}
  
-            <input type="submit"  />
-            </div>
-            </form>
-    <canvas width="320" id="canvas" height="240" style="display: inline;"></canvas>
-    </div>
-    </div>
-    <script type="text/javascript">
-      var video = document.getElementById("live_video");
-      var canvas = document.getElementById("canvas");
-      navigator.webkitGetUserMedia({video:true, audio:true},
-          function(stream) {
-            video.src = window.webkitURL.createObjectURL(stream);
-          }, function(err) {
-                console.log("Unable to get video stream!")
-            }
-      );
+ 
+{% block title %} Input Face {% endblock %}
+ 
+{% block content %}
+        
+
+<div class="video-container">  
+  <video id="live_video" autoplay controls>
+    
+  </video>
+    <form action="/save/" method="post">{% csrf_token %}
+      <div>
+        <input type="text" id="name" name="name"/>     
+        <input type="submit"  />
+      </div>
+    </form>
+    <canvas width="320" id="canvas" height="240" style="display: inline;">
       
-      var ctx = canvas.getContext('2d');
-      var data = ''
-      timer = setInterval(
-                function(){
+    </canvas>
+</div>
 
-                    ctx.drawImage(video,0,0,320,240);
-                    data = canvas.toDataURL('image/jpeg',1.0);
 
-                    //alert(data);
-                    },2500);
-      alert(data);
-                    
-    </script>
+<script type="text/javascript">
+  var video = document.getElementById("live_video");
+  var canvas = document.getElementById("canvas");
+  navigator.webkitGetUserMedia({video:true, audio:true},
+      function(stream) {
+        video.src = window.webkitURL.createObjectURL(stream);
+      }, function(err) {
+            console.log("Unable to get video stream!")
+        }
+  );
+  
+  var ctx = canvas.getContext('2d');
+  var data = ''
+  timer = setInterval(
+            function(){
+                ctx.drawImage(video,0,0,320,240);
+                data = canvas.toDataURL('image/jpeg',1.0);
+                //alert(data);
+            },2500
+          );
+                
+</script>
 
 <style type="text/css">
   body{
