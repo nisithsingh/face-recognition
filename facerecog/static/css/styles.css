@@ -1,0 +1,11 @@
+.navbar-brand {
+  height: 10px;
+}
+
+.col-md-2 {
+	float: right;
+}
+
+.nav-tabs { 
+	border-bottom: 0px; #important
+}

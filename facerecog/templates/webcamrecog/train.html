@@ -7,20 +7,20 @@
             
     <style type="text/css">
       body{
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 500px;
+        max-height: 500px;
       }
       #live_video{
         top: 0px;
-        height: 100%;
-        width: 100%;
-        left: 0px;
+        height: 50%;
+        width: 50%;
+        right: 200px; !important
       }
     </style>
   
     <div>  
     <video id="live_video" autoplay controls></video>
-     <form action="http://127.0.0.1:8000/save_image" method="post">{% csrf_token %}
+     <form action="/save_image/" method="post">{% csrf_token %}
             <div>
             <input type="text" id="name" name="name"/>     
             
@@ -56,7 +56,7 @@
                     
     </script>
 
-    {% endblock %}
+{% endblock %}
 
   
     

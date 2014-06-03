@@ -9,5 +9,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', 'webcamrecog.views.home'),
+    url(r'^home/$', 'webcamrecog.views.home'),
     url(r'^train/', 'webcamrecog.views.train'),
 )
