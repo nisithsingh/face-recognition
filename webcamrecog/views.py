@@ -8,3 +8,6 @@ def home(request):
 
 def train(request):
 	return render(request,'webcamrecog/train.html')
+
+def save(request):
+	return render(request,'webcamrecog/train.html')
