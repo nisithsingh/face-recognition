@@ -5,20 +5,8 @@
      
     {% block content %}
             
-    <style type="text/css">
-      body{
-        max-width: 500px;
-        max-height: 500px;
-      }
-      #live_video{
-        top: 0px;
-        height: 50%;
-        width: 50%;
-        right: 200px; !important
-      }
-    </style>
-  
-    <div>  
+
+    <div class="video-container">  
     <video id="live_video" autoplay controls></video>
      <form action="/save_image/" method="post">{% csrf_token %}
             <div>
@@ -29,7 +17,7 @@
             </div>
             </form>
     <canvas width="320" id="canvas" height="240" style="display: inline;"></canvas>
-    
+    </div>
     </div>
     <script type="text/javascript">
       var video = document.getElementById("live_video");
@@ -56,6 +44,28 @@
                     
     </script>
 
+<style type="text/css">
+  body{
+        max-width: 500px;
+        max-height: 500px;
+      }
+  #live_video{
+        top: 0px;
+        height: 75%;
+        width: 75%;
+        right: 200px; !important
+      }
+
+  .video-container{
+    position: relative;
+    width: 800px;
+    margin: 0px 0px 0px 200px;
+    padding: 20px 40px 40px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+    </style>
 {% endblock %}
 
   
