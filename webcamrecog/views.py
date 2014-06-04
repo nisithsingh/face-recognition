@@ -17,6 +17,7 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
 face_count = 1
+omniUser = ''
 
 def home(request):
   return render(request, "webcamrecog/home.html")
@@ -28,12 +29,18 @@ def train(request):
 @csrf_exempt
 def save(request):
 	global face_count
+	global omniUser
 	resp = {'error': '0', 'message': 'All was ok'}
 	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 	image_dir = 'face_attr'
 	if request.method == 'POST':
 		val = ast.literal_eval(request.body)
+		if (face_count == 1):
+			omniUser = val['person']
 		username = val['person']
+		if not (omniUser == username):
+			face_count = 1
+			omniUser = val['person']
 		img = val['image']
 		path = os.path.join(BASE_DIR, image_dir, username)
 		if not os.path.isdir(path):

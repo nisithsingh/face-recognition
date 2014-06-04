@@ -60,12 +60,9 @@ function UploadToServer() {
 $("#upload").attr('disabled', 'disabled');
 $("#upload").attr("value", "Uploading...");
 var img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
-//var imgData = {"person":person,"image":img}
-//alert(imgData)
 $.ajax({
     url: "/save/",
     type: "POST",
-    //data: "{'person':'Nisith','image':'sdgfiuagsdfiugasouidfglasdugfuiasgdfkasgdfugasodugf'}",
     data: "{ 'person': '" + person +"','image': '" + img + "' }",
     contentType: "application/json; charset=utf-8",
     dataType: "json",
