@@ -4,6 +4,7 @@ import re
 import urllib
 import base64
 import json
+import ast
 
 from django.template import Template
 from django.template.loader import get_template
@@ -30,10 +31,10 @@ def save(request):
 	resp = {'error': '0', 'message': 'All was ok'}
 	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 	image_dir = 'face_attr'
-	username = "Test"
 	if request.method == 'POST':
-		img = request.body
-		# print img
+		val = ast.literal_eval(request.body)
+		username = val['person']
+		img = val['image']
 		path = os.path.join(BASE_DIR, image_dir, username)
 		if not os.path.isdir(path):
 			os.mkdir(path)
@@ -42,8 +43,8 @@ def save(request):
 		f.write(base64.b64decode(img))
 		f.close()
 		face_count += 1
-		return HttpResponse(json.dumps(resp), mimetype="application/json")
+		return HttpResponse(json.dumps(resp), content_type="application/json")
 	else:
-		return HttpResponse(json.dumps(resp), mimetype="application/json")
+		return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
