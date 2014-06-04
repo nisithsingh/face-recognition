@@ -16,8 +16,8 @@
         </td>
       </tr>
       <tr>
-        <td><input id="snap" class="btn btn-primary" value="Click to Capture" /></td>
-        <td><input id="upload" class="btn btn-primary" value="upload" onclick="UploadToServer()" /></td>
+        <td colspan=2><input id="snap" class="btn btn-primary" value="Click to Capture" /></td>
+        <!-- <td><input id="upload" class="btn btn-primary" value="upload"/></td> -->
       </tr>
     </table>
   </div>
@@ -25,11 +25,13 @@
 
 <script type="text/javascript">
     var person;
-     window.addEventListener("DOMContentLoaded", function () {
+    var timer = 0;
+    var imgCount = 1;
+    
+    window.addEventListener("DOMContentLoaded", function () {
     // Grab elements, create settings, etc.
-    var canvas = document.getElementById("canvas"),
-        context = canvas.getContext("2d"),
-        video = document.getElementById("video"),
+   
+     var   video = document.getElementById("video"),
         videoObj = { "video": true },
         errBack = function (error) {
             console.log("Video capture error: ", error.code);
@@ -52,33 +54,47 @@
         if (person == null) {
           person = prompt("Please enter your name");
         }
-        context.drawImage(video, 0, 0, 600, 400);
+        timer = setInterval(function(){UploadToServer()},1000);
+        $("#snap").attr("value", "Upload");
     });
 }, false);
 
+
 function UploadToServer() {
-$("#upload").attr('disabled', 'disabled');
-$("#upload").attr("value", "Uploading...");
-var img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
-$.ajax({
-    url: "/save/",
-    type: "POST",
-    data: "{ 'person': '" + person +"','image': '" + img + "' }",
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-    success: function () {
-        alert('Image Uploaded!!');
-        $("#upload").removeAttr('disabled');
-        $("#upload").attr("value", "Upload");
-    },
-    error: function (e) {
-        alert("Error : " + e);
-        $("#upload").removeAttr('disabled');
-        $("#upload").attr("value", "Upload");
+
+    var canvas = document.getElementById("canvas"),
+        context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0, 600, 400);
+
+    var img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+
+
+    $.ajax({
+        url: "/save/",
+        type: "POST",
+        data: "{ 'person': '" + person +"','image': '" + img + "' }",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function () {
+            //alert('Image Uploaded!!');
+            $("#snap").removeAttr('disabled');
+            $("#snap").attr("value", "Uploading image " + imgCount + " of 10" );
+            // $("#snap").attr("value", "Upload");
+        },
+        error: function (e) {
+            alert("Error : " + e);
+            $("#snap").removeAttr('disabled');
+            $("#snap").attr("value", "Upload");
+        }
+    });
+
+    if(imgCount == 10) {
+        clearInterval(timer);
+      } else {
+        imgCount++;
+      }
     }
-});
-}
-    </script>
+</script>
 
 <style type="text/css">
   body{
