@@ -1,49 +1,81 @@
 {% extends 'base.html' %}
  
  
-{% block title %} Input Face {% endblock %}
- 
 {% block content %}
-        
 
-<div class="video-container">  
-  <video id="live_video" autoplay controls>
-    
-  </video>
-    <form action="/save/" method="post">{% csrf_token %}
-      <div>
-        <input type="text" id="name" name="name"/>     
-        <input type="submit"  />
-      </div>
-    </form>
-    <canvas width="320" id="canvas" height="240" style="display: inline;">
-      
-    </canvas>
+<div class="panel panel-default">
+<div class="panel-heading"><b>Training the Bot..</b></div>
+  <div class="table-responsive">
+    <table class="table">
+      <tr>
+        <td>
+          <video autoplay id="video" width="600" height="400"></video>
+        </td>
+        <td>
+          <canvas id="canvas" width="600" height="400"></canvas>
+        </td>
+      </tr>
+      <tr>
+        <td><input id="snap" class="btn btn-primary" value="Click to Capture" /></td>
+        <td><input id="upload" class="btn btn-primary" value="upload" onclick="UploadToServer()" /></td>
+      </tr>
+    </table>
+  </div>
 </div>
 
-
 <script type="text/javascript">
-  var video = document.getElementById("live_video");
-  var canvas = document.getElementById("canvas");
-  navigator.webkitGetUserMedia({video:true, audio:true},
-      function(stream) {
-        video.src = window.webkitURL.createObjectURL(stream);
-      }, function(err) {
-            console.log("Unable to get video stream!")
-        }
-  );
-  
-  var ctx = canvas.getContext('2d');
-  var data = ''
-  timer = setInterval(
-            function(){
-                ctx.drawImage(video,0,0,320,240);
-                data = canvas.toDataURL('image/jpeg',1.0);
-                //alert(data);
-            },2500
-          );
-                
-</script>
+     window.addEventListener("DOMContentLoaded", function () {
+    // Grab elements, create settings, etc.
+    var canvas = document.getElementById("canvas"),
+        context = canvas.getContext("2d"),
+        video = document.getElementById("video"),
+        videoObj = { "video": true },
+        errBack = function (error) {
+            console.log("Video capture error: ", error.code);
+        };
+ 
+    if (navigator.getUserMedia) { // Standard
+        navigator.getUserMedia(videoObj, function (stream) {
+            video.src = stream;
+            video.play();
+        }, errBack);
+    } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
+        navigator.webkitGetUserMedia(videoObj, function (stream) {
+            video.src = window.webkitURL.createObjectURL(stream);
+            video.play();
+        }, errBack);
+    }
+ 
+    // Trigger photo take
+    document.getElementById("snap").addEventListener("click", function () {
+        context.drawImage(video, 0, 0, 600, 400);
+    });
+}, false);
+
+function UploadToServer() {
+$("#upload").attr('disabled', 'disabled');
+$("#upload").attr("value", "Uploading...");
+var img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+
+$.ajax({
+    url: "/save/",
+    type: "POST",
+    data: img,
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function () {
+        alert('Image Uploaded!!');
+        $("#upload").removeAttr('disabled');
+        $("#upload").attr("value", "Upload");
+    },
+    error: function (e) {
+        alert("Error : " + e);
+        $("#upload").removeAttr('disabled');
+        $("#upload").attr("value", "Upload");
+    }
+});
+}
+    </script>
 
 <style type="text/css">
   body{
@@ -51,6 +83,7 @@
         max-height: 500px;
       }
     </style>
+
 {% endblock %}
 
   
