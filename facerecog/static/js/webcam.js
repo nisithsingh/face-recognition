@@ -64,6 +64,7 @@ function UploadToServer() {
 
     if(imgCount == 10) {
         clearInterval(timer);
+        alert("Please click on Compare tab to see if it recognizes you now...!!!")
       } else {
         imgCount++;
       }
