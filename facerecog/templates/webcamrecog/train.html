@@ -24,6 +24,7 @@
 </div>
 
 <script type="text/javascript">
+    var person;
      window.addEventListener("DOMContentLoaded", function () {
     // Grab elements, create settings, etc.
     var canvas = document.getElementById("canvas"),
@@ -48,6 +49,9 @@
  
     // Trigger photo take
     document.getElementById("snap").addEventListener("click", function () {
+        if (person == null) {
+          person = prompt("Please enter your name");
+        }
         context.drawImage(video, 0, 0, 600, 400);
     });
 }, false);

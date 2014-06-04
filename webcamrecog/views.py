@@ -1,4 +1,4 @@
-import os.path
+import os
 import datetime
 import re
 import urllib
@@ -13,11 +13,9 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import render_to_response
-from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.csrf import csrf_exempt
 
-
-# Create your views here.
+face_count = 1
 
 def home(request):
   return render(request, "webcamrecog/home.html")
@@ -28,13 +26,22 @@ def train(request):
 
 @csrf_exempt
 def save(request):
-	resp = {'error': '0', 'message': 'all was ok'}
-	face_name = "Test"
+	global face_count
+	resp = {'error': '0', 'message': 'All was ok'}
+	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+	image_dir = 'face_attr'
+	username = "Test"
 	if request.method == 'POST':
 		img = request.body
-		f = open(face_name +'.jpg', 'wb')
+		# print img
+		path = os.path.join(BASE_DIR, image_dir, username)
+		if not os.path.isdir(path):
+			os.mkdir(path)
+		print path
+		f = open(os.path.join(path,str(face_count)) +'.jpg', 'wb')
 		f.write(base64.b64decode(img))
 		f.close()
+		face_count += 1
 		return HttpResponse(json.dumps(resp), mimetype="application/json")
 	else:
 		return HttpResponse(json.dumps(resp), mimetype="application/json")
