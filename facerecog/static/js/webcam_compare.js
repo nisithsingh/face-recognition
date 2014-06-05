@@ -19,4 +19,42 @@ window.addEventListener("DOMContentLoaded", function () {
         }, errBack);
     }
 
+     // Trigger photo take
+    document.getElementById("snap").addEventListener("click", function () {
+       
+       UploadToServer();
+        
+    });
+
     }, false);
+
+function UploadToServer() {
+
+    var canvas = document.getElementById("canvas"),
+        context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0, 600, 400);
+
+    var img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+
+
+    $.ajax({
+        url: "/save/",
+        type: "POST",
+        data: img,
+        //"{ 'person': '" + person +"','image': '" + img + "' }",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function () {
+            //alert('Image Uploaded!!');
+            $("#snap").removeAttr('disabled');
+            $("#snap").attr("value", "Uploaded image " + imgCount + " of 10" );
+            // $("#snap").attr("value", "Upload");
+        },
+        error: function (e) {
+            alert("Error : " + e);
+            $("#snap").removeAttr('disabled');
+            $("#snap").attr("value", "Upload");
+        }
+    });
+
+    }
