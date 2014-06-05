@@ -4,7 +4,8 @@ import re
 import urllib
 import base64
 import json
-import ast
+import string
+import random
 
 from django.template import Template
 from django.template.loader import get_template
@@ -19,12 +20,17 @@ from django.views.decorators.csrf import csrf_exempt
 face_count = 1
 omniUser = ''
 
+def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
+	return ''.join(random.choice(chars) for _ in range(size))
+
 def home(request):
   return render(request, "webcamrecog/home.html")
 
-
 def train(request):
 	return render(request,'webcamrecog/train.html')
+
+def compare(request):
+	return render(request,'webcamrecog/compare.html')
 
 @csrf_exempt
 def save(request):
@@ -50,6 +56,24 @@ def save(request):
 		f.write(base64.b64decode(img))
 		f.close()
 		face_count += 1
+		return HttpResponse(json.dumps(resp), content_type="application/json")
+	else:
+		return HttpResponse(json.dumps(resp), content_type="application/json")
+
+@csrf_exempt
+def recog(request):
+	resp = {'error': '0', 'message': 'All was ok'}
+	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+	image_dir = 'face_attr/temp/'
+	if request.method == 'POST':
+		img = request.body
+		path = os.path.join(BASE_DIR, image_dir)
+		if not os.path.isdir(path):
+			os.mkdir(path)
+		img_path = (path + id_generator() + '.jpg')
+		f = open(img_path, 'wb')
+		f.write(base64.b64decode(img))
+		f.close()
 		return HttpResponse(json.dumps(resp), content_type="application/json")
 	else:
 		return HttpResponse(json.dumps(resp), content_type="application/json")

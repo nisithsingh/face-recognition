@@ -13,4 +13,6 @@ urlpatterns = patterns('',
     url(r'^home/$', 'webcamrecog.views.home'),
     url(r'^train/$', 'webcamrecog.views.train'),
     url(r'^save/$', 'webcamrecog.views.save'),
+    url(r'^compare/$', 'webcamrecog.views.compare'),
+    url(r'^recog/$', 'webcamrecog.views.recog'),
 )

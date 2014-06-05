@@ -21,9 +21,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
      // Trigger photo take
     document.getElementById("snap").addEventListener("click", function () {
-       
-       UploadToServer();
-        
+       UploadToServer();        
     });
 
     }, false);
@@ -38,22 +36,20 @@ function UploadToServer() {
 
 
     $.ajax({
-        url: "/save/",
+        url: "/recog/",
         type: "POST",
         data: img,
-        //"{ 'person': '" + person +"','image': '" + img + "' }",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function () {
             //alert('Image Uploaded!!');
             $("#snap").removeAttr('disabled');
-            $("#snap").attr("value", "Uploaded image " + imgCount + " of 10" );
-            // $("#snap").attr("value", "Upload");
+            $("#snap").attr("value", "Click to Compare");
         },
         error: function (e) {
             alert("Error : " + e);
             $("#snap").removeAttr('disabled');
-            $("#snap").attr("value", "Upload");
+            $("#snap").attr("value", "Click to Compare");
         }
     });
 

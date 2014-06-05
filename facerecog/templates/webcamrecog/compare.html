@@ -1,13 +1,11 @@
-{% extends 'base.html' %}
- 
- 
-{% block content %}
-
-<div class="container">
-  <p style="font-size:24px" float: center; padding-left: 500px;> Train my Bot..!!!</p>
-</div>  
-
-  <div class="table-responsive">
+    {% extends 'base.html' %}
+     
+     
+    {% block title %} Input Face {% endblock %}
+     
+    {% block content %}
+            
+<div class="table-responsive">
     <table class="table">
       <tr>
         <td>
@@ -18,13 +16,14 @@
         </td>
       </tr>
       <tr>
-        <td colspan=2><input id="snap" class="btn btn-block btn-lg btn-primary" value="Click to Capture" /></td>
+        <td colspan=2><input id="snap" class="btn btn-block btn-lg btn-primary" value="Click to Compare" /></td>
         <!-- <td><input id="upload" class="btn btn-primary" value="upload"/></td> -->
       </tr>
     </table>
   </div>
-  
-<script src="/static/js/webcam_train.js"></script>
+
+
+<script src="/static/js/webcam_compare.js"></script>
 
 <style type="text/css">
   body{
@@ -32,7 +31,6 @@
         max-height: 500px;
       }
     </style>
-
 {% endblock %}
 
   
