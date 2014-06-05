@@ -4,6 +4,7 @@ import re
 import urllib
 import base64
 import json
+import ast
 import string
 import random
 
@@ -19,6 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 face_count = 1
 omniUser = ''
+
 
 def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
@@ -64,7 +66,7 @@ def save(request):
 def recog(request):
 	resp = {'error': '0', 'message': 'All was ok'}
 	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-	image_dir = 'face_attr/temp/'
+	image_dir = 'temp/'
 	if request.method == 'POST':
 		img = request.body
 		path = os.path.join(BASE_DIR, image_dir)
