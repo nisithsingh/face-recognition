@@ -53,7 +53,6 @@ def save(request):
 		f = open(img_path, 'wb')
 		f.write(base64.b64decode(img))
 		f.close()
-		convertFullImgToTrainImage(path,img_path)
 		return HttpResponse(json.dumps(resp), content_type="application/json")
 	else:
 		return HttpResponse(json.dumps(resp), content_type="application/json")
