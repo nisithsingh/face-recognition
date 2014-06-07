@@ -19,7 +19,6 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
 face_count = 1
-omniUser = ''
 
 
 def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
@@ -36,28 +35,25 @@ def compare(request):
 
 @csrf_exempt
 def save(request):
-	global face_count
-	global omniUser
+	face_count = 1
 	resp = {'error': '0', 'message': 'All was ok'}
 	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 	image_dir = 'face_attr'
 	if request.method == 'POST':
 		val = ast.literal_eval(request.body)
-		if (face_count == 1):
-			omniUser = val['person']
 		username = val['person']
-		if not (omniUser == username):
-			face_count = 1
-			omniUser = val['person']
 		img = val['image']
 		path = os.path.join(BASE_DIR, image_dir, username)
 		if not os.path.isdir(path):
 			os.mkdir(path)
-		print path
-		f = open(os.path.join(path,str(face_count)) +'.jpg', 'wb')
+		path, dirs, files = os.walk(path).next()
+		face_count = len(files) + 1
+		img_path = os.path.join(path,str(face_count)) +'.jpg'
+		print img_path
+		f = open(img_path, 'wb')
 		f.write(base64.b64decode(img))
 		f.close()
-		face_count += 1
+
 		return HttpResponse(json.dumps(resp), content_type="application/json")
 	else:
 		return HttpResponse(json.dumps(resp), content_type="application/json")
