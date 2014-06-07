@@ -41,15 +41,20 @@ function UploadToServer() {
         data: img,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function () {
-            //alert('Image Uploaded!!');
+        success: function (json) {
+            var img = new Image;
+            img.src = 'data:image/png;base64,' + json.image;
+            img.onload = function(){
+                context.drawImage(img, 0, 0, 600, 400);
+            };
+            // $('#result')[0].src = 'data:image/png;base64,' + json.image;
             $("#snap").removeAttr('disabled');
-            $("#snap").attr("value", "Click to Compare");
+            $("#snap").attr("value", "Click to Detect");
         },
         error: function (e) {
             alert("Error : " + e);
             $("#snap").removeAttr('disabled');
-            $("#snap").attr("value", "Click to Compare");
+            $("#snap").attr("value", "Click to Detect");
         }
     });
 

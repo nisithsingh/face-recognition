@@ -7,6 +7,7 @@ import json
 import ast
 import string
 import random
+import cv2, sys, numpy, os
 
 from django.template import Template
 from django.template.loader import get_template
@@ -19,7 +20,7 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
 face_count = 1
-
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
@@ -37,7 +38,6 @@ def compare(request):
 def save(request):
 	face_count = 1
 	resp = {'error': '0', 'message': 'All was ok'}
-	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 	image_dir = 'face_attr'
 	if request.method == 'POST':
 		val = ast.literal_eval(request.body)
@@ -53,16 +53,16 @@ def save(request):
 		f = open(img_path, 'wb')
 		f.write(base64.b64decode(img))
 		f.close()
-
+		convertFullImgToTrainImage(path,img_path)
 		return HttpResponse(json.dumps(resp), content_type="application/json")
 	else:
 		return HttpResponse(json.dumps(resp), content_type="application/json")
 
 @csrf_exempt
 def recog(request):
-	resp = {'error': '0', 'message': 'All was ok'}
+	resp = {}
 	BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-	image_dir = 'temp/'
+	image_dir = 'tmp/'
 	if request.method == 'POST':
 		img = request.body
 		path = os.path.join(BASE_DIR, image_dir)
@@ -72,8 +72,32 @@ def recog(request):
 		f = open(img_path, 'wb')
 		f.write(base64.b64decode(img))
 		f.close()
-		return HttpResponse(json.dumps(resp), content_type="application/json")
+		rects, img = detect(img_path)
+		box(rects, img, img_path)
+		with open(img_path, "rb") as image_file:
+		    img_content = base64.b64encode(image_file.read())
+		image_file.close()
+		resp.update({'image': img_content })
+		return HttpResponse(json.dumps(resp), content_type="application/javasript")
 	else:
 		return HttpResponse(json.dumps(resp), content_type="application/json")
+
+@csrf_exempt
+def detect(path):
+	fn_haar = 'facerecog/static/haarcascade_frontalface_alt.xml'
+	img = cv2.imread(path)
+	cascade = cv2.CascadeClassifier(fn_haar)
+	rects = cascade.detectMultiScale(img, 1.005, 4, cv2.cv.CV_HAAR_SCALE_IMAGE, (20,20))
+
+	if len(rects) == 0:
+		return [], img
+	rects[:, 2:] += rects[:, :2]
+	return rects, img
+
+@csrf_exempt
+def box(rects, img, img_path):
+	for x1, y1, x2, y2 in rects:
+		cv2.rectangle(img, (x1, y1), (x2, y2), (127, 255, 0), 2)
+	cv2.imwrite(img_path, img);
 
 

@@ -14,5 +14,6 @@ urlpatterns = patterns('',
     url(r'^train/$', 'webcamrecog.views.train'),
     url(r'^save/$', 'webcamrecog.views.save'),
     url(r'^compare/$', 'webcamrecog.views.compare'),
-    url(r'^recog/$', 'webcamrecog.views.recog'),
+    url(r'^recog/$', 'webcamrecog.views.recog'),    
+    # url(r'^convert/$', 'webcamrecog.views.convertFullImgToTrainImage'),
 )
